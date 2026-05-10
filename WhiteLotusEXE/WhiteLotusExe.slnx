@@ -1,0 +1,8 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Source/Dropper/Dropper.vcxproj" Id="ac86b2b5-0d14-4963-bb0c-d78656f7bb08" />
+  <Project Path="Source/LoadEfi/LoadEfi.vcxproj" Id="a6658f6f-1ed9-4050-ac63-e82cc4ccffe5" />
+</Solution>
