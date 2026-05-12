@@ -60,13 +60,8 @@ typedef enum _INPUT_FILETYPE
 {
 	Unknown,
 
-	// BIOS boot manager/loader
-	Bootmgr,	// Unsupported
-	WinloadExe,	// Unsupported
-
 	// EFI boot manager/loader
 	BootmgfwEfi,
-	BootmgrEfi,
 	WinloadEfi,
 
 	// Kernel

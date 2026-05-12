@@ -82,10 +82,6 @@ GetInputFileType(
 	IN UINTN ImageSize
 	)
 {
-	// The non-EFI bootmgr starts with a 16 bit real mode stub instead of the standard MZ header
-	if (*(UINT16*)ImageBase == 0xD5E9)
-		return Bootmgr;
-
 	CONST PEFI_IMAGE_NT_HEADERS NtHeaders = RtlpImageNtHeaderEx(ImageBase, ImageSize);
 	if (NtHeaders == NULL)
 		return Unknown;
@@ -97,7 +93,7 @@ GetInputFileType(
 	if (Subsystem == EFI_IMAGE_SUBSYSTEM_EFI_APPLICATION)
 	{
 		// Of the Windows loaders, only bootmgfw.efi has this subsystem type.
-		// Check for the BCD Bootmgr GUID, { 9DEA862C-5CDD-4E70-ACC1-F32B344D4795 }, which is present in bootmgfw/bootmgr (and on Win >= 8 also winload.[exe|efi])
+		// Check for the BCD Bootmgr GUID, { 9DEA862C-5CDD-4E70-ACC1-F32B344D4795 }, which is present in bootmgfw (and on Win >= 8 also winload.efi)
 		CONST EFI_GUID BcdWindowsBootmgrGuid = { 0x9dea862c, 0x5cdd, 0x4e70, { 0xac, 0xc1, 0xf3, 0x2b, 0x34, 0x4d, 0x47, 0x95 } };
 		for (UINT8* Address = (UINT8*)ImageBase; Address < ImageBase + ImageSize - sizeof(BcdWindowsBootmgrGuid); Address += sizeof(VOID*))
 		{
@@ -118,8 +114,7 @@ GetInputFileType(
 		return Unknown;
 	}
 
-	// Brute force scan .rsrc to check if this is either winload.efi or bootmgr.efi.
-	// We've already eliminated bootmgr and bootmgfw.efi as candidates, so there will be no false positives
+	// Brute force scan .rsrc to check if this is winload.efi
 	UINT32 Size = 0;
 	EFI_IMAGE_RESOURCE_DIRECTORY *ResourceDirTable =
 		RtlpImageDirectoryEntryToDataEx(ImageBase,
@@ -131,10 +126,6 @@ GetInputFileType(
 
 	for (UINT8* Address = (UINT8*)ResourceDirTable; Address < ImageBase + ImageSize - sizeof(L"OSLOADER.XSL"); Address += sizeof(CHAR16))
 	{
-		if (CompareMem(Address, L"BOOTMGR.XSL", sizeof(L"BOOTMGR.XSL") - sizeof(CHAR16)) == 0)
-		{
-			return BootmgrEfi;
-		}
 		if (CompareMem(Address, L"OSLOADER.XSL", sizeof(L"OSLOADER.XSL") - sizeof(CHAR16)) == 0)
 		{
 			return WinloadEfi;
@@ -153,14 +144,8 @@ FileTypeToString(
 {
 	switch (FileType)
 	{
-		case Bootmgr:
-			return L"bootmgr";
-		case WinloadExe:
-			return L"winload.exe";
 		case BootmgfwEfi:
 			return L"bootmgfw.efi";
-		case BootmgrEfi:
-			return L"bootmgr.efi";
 		case WinloadEfi:
 			return L"winload.efi";
 		case Ntoskrnl:

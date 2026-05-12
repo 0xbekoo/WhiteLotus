@@ -98,6 +98,9 @@ EFI_STATUS EFIAPI PatchWinload(
     CONST VOID* ImageBase,
     PEFI_IMAGE_NT_HEADERS NtHeaders
 ) {
+  // Simple Banner
+  Print(L"WhiteLotus by 0xbekoo...\n");
+
   UINT16 MajorVersion = 0, MinorVersion = 0, BuildNumber = 0, Revision = 0;
   EFI_STATUS Status;
 
@@ -107,7 +110,7 @@ EFI_STATUS EFIAPI PatchWinload(
     Print(L"\r\nFailed to obtain winload.efi version info. Status: %llx\r\n", Status);
   }
   gKernelPatchInfo.WinloadBuildNumber = BuildNumber;
-  Print(L"\r\nPatching winload.efi v%u.%u.%u.%u...\r\n", MajorVersion, MinorVersion, BuildNumber, Revision);
+  DEBUG((DEBUG_INFO, "\r\nPatching winload.efi v%u.%u.%u.%u...\r\n", MajorVersion, MinorVersion, BuildNumber, Revision));
 
   // Locate .text and .rdata sections for pattern searching
   PEFI_IMAGE_SECTION_HEADER CodeSection = NULL, PatternSection = NULL;
@@ -138,7 +141,6 @@ EFI_STATUS EFIAPI PatchWinload(
       return EFI_NOT_FOUND;
     }
   }
-  Print(L"BlStatusPrint was found!\n");
 
   // Disable VBS for this boot session
   Status = DisableVbs();

@@ -1,8 +1,8 @@
 #include "PatchBootMgfw.h"
 
 // Hook handler for ImgArchStartBootApplication
-// Called when bootmgfw.efi or bootmgr.exe starts a boot application
-// Restores original function, patches winload/winresume, then calls original
+// Called when bootmgfw.efi starts a boot application
+// Restores original function, patches winload, then calls original
 STATIC EFI_STATUS EFIAPI HookedBootManagerImgArchStartBootApplication(
   PBL_APPLICATION_ENTRY AppEntry,
   VOID* ImageBase,
@@ -15,7 +15,6 @@ STATIC EFI_STATUS EFIAPI HookedBootManagerImgArchStartBootApplication(
   // Restore the original function bytes before patching and calling
   CopyWpMem(OriginalFunction, OriginalFunctionBytes, sizeof(gHookTemplate));
 
-  // Validate PE headers
   CONST PEFI_IMAGE_NT_HEADERS NtHeaders = RtlpImageNtHeaderEx(ImageBase, ImageSize);
   INPUT_FILETYPE FileType = Unknown;
   if (NtHeaders == NULL)
@@ -26,12 +25,11 @@ STATIC EFI_STATUS EFIAPI HookedBootManagerImgArchStartBootApplication(
   }
 
   FileType = GetInputFileType(ImageBase, (UINTN)ImageSize);
-  if (FileType != WinloadEfi && FileType != BootmgrEfi)
+  if (FileType != WinloadEfi)
   {
     goto CallOriginal;
   }
 
-  // This is bootmgfw.efi - proceed to patch winload.efi
   DEBUG((DEBUG_INFO, "[WhiteLotus] We got winload.efi!\n"));
   PatchWinload(ImageBase, NtHeaders);
 
@@ -55,12 +53,10 @@ STATIC EFI_STATUS EFIAPI HookedBootmgrImgArchStartBootApplication_Eight(
     gOriginalBootmgfwImgArchStartBootApplication, gBootmgfwImgArchStartBootApplicationBackup);
 }
 
-// Main entry point for patching bootmgfw.efi or bootmgr.efi
+// Main entry point for patching bootmgfw.efi
 // Locates ImgArchStartBootApplication and installs a hook
 EFI_STATUS EFIAPI PatchBootMgfw(INPUT_FILETYPE FileType, CONST VOID* ImageBase, UINTN ImageSize) {
-  // Determine target file name for logging
-  CONST BOOLEAN PatchingBootmgrEfi = FileType == BootmgrEfi;
-  CONST CHAR16* ShortFileName = PatchingBootmgrEfi ? L"bootmgr" : L"bootmgfw";
+  CONST CHAR16* ShortFileName = L"bootmgfw";
   EFI_STATUS Status;
 
   // Validate PE headers
@@ -127,7 +123,7 @@ EFI_STATUS EFIAPI PatchBootMgfw(INPUT_FILETYPE FileType, CONST VOID* ImageBase, 
   CopyWpMem((UINT8*)OriginalAddress + gHookTemplateAddressOffset, (UINTN*)&HookAddress, sizeof(UINTN));
 
   gBS->RestoreTPL(Tpl);
-  DEBUG((DEBUG_INFO, "[PatchBootManager] ImgArchStartBootApplication was hooked!\n"));
+  DEBUG((DEBUG_INFO, "[WhiteLotus] ImgArchStartBootApplication was hooked!\n"));
 
   return EFI_SUCCESS;
 }

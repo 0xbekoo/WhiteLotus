@@ -17,10 +17,10 @@ EFI_STATUS EFIAPI HookedSetVariable(
   IN UINTN     DataSize,
   IN VOID     *Data
 ) {
-  DEBUG((DEBUG_INFO, "[White] HookedSetVariable was triggered!"));
+  DEBUG((DEBUG_INFO, "[WhiteLotus] HookedSetVariable was triggered!"));
 
   if (StrCmp(VariableName, NvramName) == 0) {
-    DEBUG((DEBUG_INFO, "[White] Variable found.\n"));
+    DEBUG((DEBUG_INFO, "[WhiteLotus] Variable found.\n"));
     return EFI_SUCCESS;
   }
   EFI_STATUS Status = OriginalSetVariableAddress(VariableName, VendorGuid, Attributes, DataSize, Data);
