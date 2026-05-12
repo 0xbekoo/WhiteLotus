@@ -160,7 +160,15 @@ The same applies to the LoadEfi project: the .efi file within the project is def
 
 If you’ve made changes to the project and want to run it, here’s exactly what you need to do: If you’ve made changes to LoadEfi or Dropper, compile these projects, then use the EncryptTool tool included in the project to process the compiled LoadEfi or Dropper executable, retrieve the encrypted bytes, and replace them in the relevant header files. Since the projects will decrypt themselves automatically, simply adding the encrypted version will be sufficient. 
 
-You can also use this same tool for the WhiteLotus.efi file (this is not required, but if necessary in certain situations, you can access the .efi file from the Releases).
+You can also use this same tool for the WhiteLotus.efi file (this is not required, but if necessary in certain situations, you can access the .efi file from the repo.
+
+---
+
+### **Running the Project**
+
+The project that needs to be run is the Dropper project. Do not manually launch the LoadEfi project in any way. The Dropper will handle this.
+
+Additionally, the Dropper executable file does not require UAC permission. It can be launched with standard privileges. This way, the Dropper will run LoadEfi via UACME.
 
 ---
 
