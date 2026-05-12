@@ -1,0 +1,62 @@
+[Defines]
+  INF_VERSION                    = 0x00010006
+  BASE_NAME                      = WhiteLotus
+  MODULE_TYPE                    = DXE_RUNTIME_DRIVER
+  VERSION_STRING                 = 1.0
+  ENTRY_POINT                    = WhiteLotusEntryPoint
+
+
+[Sources]
+  WhiteLotus.c
+  WhiteLotus.h
+  PatchBootMgfw.c
+  PatchBootMgfw.h
+  PatchWinload.c
+  PatchWinload.h
+  PatchKernel.c
+  Arch.h
+  Ntdef.h
+  PE.c
+  PE.h
+  Utils.c
+  Intern.c
+  Intern.h
+  Cet.asm
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+
+[LibraryClasses]
+  UefiDriverEntryPoint
+  UefiBootServicesTableLib
+  UefiLib
+  DebugLib
+  UefiRuntimeLib
+  UefiRuntimeServicesTableLib
+  MemoryAllocationLib
+  BaseMemoryLib
+  PrintLib
+  DevicePathLib
+
+[Protocols]
+  gEfiLoadedImageProtocolGuid
+  gEfiSimpleFileSystemProtocolGuid
+
+[Guids]
+  gEfiFileInfoGuid
+
+
+[Depex]
+  gEfiBdsArchProtocolGuid AND
+  gEfiCpuArchProtocolGuid AND
+  gEfiMetronomeArchProtocolGuid AND
+  gEfiMonotonicCounterArchProtocolGuid AND
+  gEfiRealTimeClockArchProtocolGuid AND
+  gEfiResetArchProtocolGuid AND
+  gEfiRuntimeArchProtocolGuid AND
+  gEfiSecurityArchProtocolGuid AND
+  gEfiTimerArchProtocolGuid AND
+  gEfiVariableWriteArchProtocolGuid AND
+  gEfiVariableArchProtocolGuid AND
+  gEfiWatchdogTimerArchProtocolGuid
