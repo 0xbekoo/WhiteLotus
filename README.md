@@ -166,6 +166,8 @@ You can also use this same tool for the WhiteLotus.efi file (this is not require
 
 ### **Running the Project**
 
+> Since this project runs on systems with Secure Boot disabled, make sure Secure Boot is turned off.
+> 
 The project that needs to be run is the Dropper project. Do not manually launch the LoadEfi project in any way. The Dropper will handle this.
 
 Additionally, the Dropper executable file does not require UAC permission. It can be launched with standard privileges. This way, the Dropper will run LoadEfi via UACME.
