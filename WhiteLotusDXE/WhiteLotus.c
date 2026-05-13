@@ -8,8 +8,6 @@ EFI_EVENT mExitBootServicesEvent = NULL;
 EFI_EVENT mSetVirtualAddressMapEvent = NULL;
 BOOLEAN gAtTime = FALSE;
 
-CHAR16 *NvramName = L"TestData";
-
 EFI_STATUS EFIAPI HookedSetVariable(
   IN CHAR16   *VariableName,
   IN EFI_GUID *VendorGuid,
@@ -19,10 +17,6 @@ EFI_STATUS EFIAPI HookedSetVariable(
 ) {
   DEBUG((DEBUG_INFO, "[WhiteLotus] HookedSetVariable was triggered!"));
 
-  if (StrCmp(VariableName, NvramName) == 0) {
-    DEBUG((DEBUG_INFO, "[WhiteLotus] Variable found.\n"));
-    return EFI_SUCCESS;
-  }
   EFI_STATUS Status = OriginalSetVariableAddress(VariableName, VendorGuid, Attributes, DataSize, Data);
   if (EFI_ERROR(Status)) {
       return Status;
