@@ -3,7 +3,6 @@
 
 #include <windows.h>
 #include <stdio.h>
-#include "uacme.h"
 #include "loader.h"
 
 typedef LONG NTSTATUS;
