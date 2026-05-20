@@ -12,6 +12,7 @@ static const GUID EspPartitionTypeGuid = {
     { 0xBA, 0x4B, 0x00, 0xA0, 0xC9, 0x3E, 0xC9, 0x3B }
 };
 
+
 #define MAX_PATH 260
 
 #define EFI_VARIABLE_NON_VOLATILE        0x00000001

