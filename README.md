@@ -6,7 +6,7 @@
 
 ## MSRC Research
 
-WhiteLotus was developed as a proof-of-concept directly tied to an MSRC security research submission examining the Windows 11 upgrade enforcement mechanism (`setup.exe` / LabConfig registry bypass).
+WhiteLotus was developed as a proof-of-concept directly tied to an MSRC security research submission examining the Windows 11 upgrade enforcement mechanism (**setup.exe** / LabConfig registry bypass).
 
 The full research report and submission details are available in the [MSRC-Report](https://github.com/0xbekoo/WhiteLotus/tree/main/MSRC-Report) folder.
 
@@ -28,7 +28,7 @@ The full research report and submission details are available in the [MSRC-Repor
 
 Here's the WhiteLotus Demonstration (Vimeo Link): [WhiteLotus Demonstration](https://vimeo.com/1194274935?share=copy&fl=sv&fe=ci)
 
-WhiteLotus is a UEFI-based security research project that demonstrates Driver Signature Enforcement (DSE) bypass techniques through byte-level patching of Windows boot components. The project operates at the firmware level, intercepting and modifying Windows Boot Manager (`bootmgfw.efi`), winload (`winload.efi`), and the Windows kernel (`ntoskrnl.exe`) to disable code signing requirements.
+WhiteLotus is a UEFI-based security research project that demonstrates Driver Signature Enforcement (DSE) bypass techniques through byte-level patching of Windows boot components. The project operates at the firmware level, intercepting and modifying Windows Boot Manager (**bootmgfw.efi**), winload (**winload.efi**), and the Windows kernel (**ntoskrnl.exe**) to disable code signing requirements.
 
 The project consists of two main components that work together to achieve unsigned kernel-mode code execution:
 
@@ -53,11 +53,11 @@ WhiteLotus/
 
 ### Key Features
 
-- **LoadImage Hook**: Intercepts `EFI_BOOT_SERVICES->LoadImage()` to monitor all EFI binaries loaded during boot
-- **Boot Manager Patching**: Locates and patches `bootmgfw.efi` (Windows Boot Manager) by hooking `ImgArchStartBootApplication`
-- **Winload Patching**: Patches `winload.efi` by hooking `OslFwpKernelSetupPhase1` to intercept kernel loading
-- **DSE Bypass**: Modifies `ntoskrnl.exe` to disable Driver Signature Enforcement by patching `CI.dll!CiInitialize`
-- **VBS Disabling**: Sets `VbsPolicyDisabled` EFI variable to disable Virtualization-Based Security
+- **LoadImage Hook**: Intercepts **EFI_BOOT_SERVICES->LoadImage()** to monitor all EFI binaries loaded during boot
+- **Boot Manager Patching**: Locates and patches **bootmgfw.efi** (Windows Boot Manager) by hooking **ImgArchStartBootApplication**
+- **Winload Patching**: Patches **winload.efi** by hooking **OslFwpKernelSetupPhase1** to intercept kernel loading
+- **DSE Bypass**: Modifies **ntoskrnl.exe** to disable Driver Signature Enforcement by patching **CI.dll!CiInitialize**
+- **VBS Disabling**: Sets **VbsPolicyDisabled** EFI variable to disable Virtualization-Based Security
 
 ### Architecture Flow
 
