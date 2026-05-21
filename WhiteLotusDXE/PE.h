@@ -1,3 +1,29 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : PE.h
+ * ============================================================
+ *
+ *  Description:
+ *    PE structure definitions not available or incorrectly
+ *    defined in EDK2: NT headers (32/64), import descriptors,
+ *    IAT thunk data, unwind information, runtime function
+ *    entries, and VS_VERSIONINFO. Also defines the
+ *    INPUT_FILETYPE enum used to classify loaded images
+ *    (BootmgfwEfi, WinloadEfi, Ntoskrnl) and declares all
+ *    PE utility function prototypes from PE.c.
+ *
+ *  Purpose:
+ *    - Provide a complete, correct set of PE types for all
+ *      patching modules operating on Windows boot images.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #pragma once
 
 #include <IndustryStandard/PeImage.h>

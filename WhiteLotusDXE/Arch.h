@@ -1,3 +1,30 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : Arch.h
+ * ============================================================
+ *
+ *  Description:
+ *    Reconstruction of Windows ARC/NTLDR internal data
+ *    structures sourced from public PDBs and WDK symbols:
+ *    LOADER_PARAMETER_BLOCK, LOADER_PARAMETER_EXTENSION,
+ *    KLDR_DATA_TABLE_ENTRY, BLDR_DATA_TABLE_ENTRY,
+ *    BL_APPLICATION_ENTRY, boot entropy structures, and
+ *    firmware information blocks up to Windows 10 20H2+.
+ *
+ *  Purpose:
+ *    - Provide the Windows boot loader type definitions
+ *      needed to traverse the boot-time module list and
+ *      access kernel/winload load parameters from inside
+ *      the hooked OslFwpKernelSetupPhase1.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 /*++ BUILD Version: 0011 // Increment this if a change has global effects
 
 Copyright (c) Microsoft Corporation. All rights reserved.

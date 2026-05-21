@@ -1,3 +1,28 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : PatchWinload.h
+ * ============================================================
+ *
+ *  Description:
+ *    Declares PatchNtoskrnl, the OslFwpKernelSetupPhase1
+ *    function typedef, winload byte-pattern signatures
+ *    (OslFwpKernelSetupPhase1, BlStatusPrint), Microsoft VBS
+ *    policy EFI GUID and variable name constants, and the
+ *    boot-loader module list enumeration helper
+ *    (GetBootLoadedModule).
+ *
+ *  Purpose:
+ *    - Share winload patch state and signature data between
+ *      PatchWinload.c and PatchKernel.c.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "WhiteLotus.h"
 #include <Guid/Acpi.h>
 

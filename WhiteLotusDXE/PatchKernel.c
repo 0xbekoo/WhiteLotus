@@ -1,3 +1,29 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — UEFI Bootkit DXE Driver
+ *  File     : PatchKernel.c
+ * ============================================================
+ *
+ *  Description:
+ *    Patches ntoskrnl.exe in-memory to disable Driver
+ *    Signature Enforcement (DSE). Locates
+ *    SepInitializeCodeIntegrity by scanning for the
+ *    CiInitialize IAT call pattern, and SeValidateImageData
+ *    by searching for the 0xC0000428 (STATUS_INVALID_IMAGE)
+ *    mov instruction, then overwrites the critical bytes to
+ *    bypass signature validation.
+ *
+ *  Purpose:
+ *    - Disable DSE at kernel initialization so that unsigned
+ *      drivers can be loaded after boot without interception.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "WhiteLotus.h"
 
 // Global kernel patch information
