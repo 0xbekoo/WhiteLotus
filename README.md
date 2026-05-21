@@ -6,8 +6,6 @@
 
 WhiteLotus was developed as a proof-of-concept directly tied to an MSRC security research submission examining the Windows 11 upgrade enforcement mechanism (**setup.exe** / LabConfig registry bypass).
 
-The full research report and submission details are available in the [MSRC-Report](https://github.com/0xbekoo/WhiteLotus/tree/main/MSRC-Report) folder.
-
 ## Project Overview
 
 Here's the WhiteLotus Demonstration (Vimeo Link): [WhiteLotus Demonstration](https://vimeo.com/1194274935?share=copy&fl=sv&fe=ci)
