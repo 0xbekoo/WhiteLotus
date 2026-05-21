@@ -2,27 +2,11 @@
 
 > **WARNING: This project is for educational and research purposes only. The author does not condone or support any illegal use of this software. Use responsibly and only in environments where you have explicit permission to do so.**
 
----
-
 ## MSRC Research
 
 WhiteLotus was developed as a proof-of-concept directly tied to an MSRC security research submission examining the Windows 11 upgrade enforcement mechanism (**setup.exe** / LabConfig registry bypass).
 
 The full research report and submission details are available in the [MSRC-Report](https://github.com/0xbekoo/WhiteLotus/tree/main/MSRC-Report) folder.
-
----
-
-## Tested Environment
-
-| Component | Version |
-|-----------|---------|
-| Windows   | _TBD_   |
-| UEFI BIOS | _TBD_   |
-| Architecture | x64 (AMD64) only |
-
-> **Note:** This project is exclusively designed for x64 (AMD64) systems. ARM, ARM64, and x86 (32-bit) architectures are not supported.
-
----
 
 ## Project Overview
 
@@ -35,8 +19,6 @@ The project consists of two main components that work together to achieve unsign
 1. **WhiteLotusDXE** - A UEFI DXE driver that hooks into the Windows boot chain
 2. **WhiteLotusEXE** - A Windows-side loader that deploys the DXE driver to the EFI System Partition (ESP)
 
----
-
 ## Project Structure
 
 ```
@@ -44,8 +26,6 @@ WhiteLotus/
 ├── WhiteLotusDXE/     # UEFI DXE Driver (main research component)
 └── WhiteLotusEXE/     # Windows Loader (deployment mechanism)
 ```
-
----
 
 ## WhiteLotusDXE
 
@@ -93,8 +73,6 @@ UEFI Firmware
 | **Arch.h** | Architecture-specific definitions (CR0, MSR, etc.) |
 | **Intern.h** | Internal synchronization primitives |
 
----
-
 ## WhiteLotusEXE
 
 **WhiteLotusEXE** is a Windows-side loader that handles the deployment of the DXE driver to the EFI System Partition and configures UEFI boot entries to execute the driver.
@@ -137,8 +115,6 @@ The project that needs to be run is the **Dropper** project. Do not manually lau
 Since the payloads are already hardcoded in the project, there is no need to provide an EFI driver. Simply compile it from the VS IDE and run the Dropper without admin privileges.
 
 The Dropper executable does not require UAC permission. It can be launched with standard privileges. This way, the Dropper will run LoadEfi as admin within the project.
-
----
 
 ## License
 
