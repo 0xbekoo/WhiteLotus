@@ -1,3 +1,28 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — Windows EFI Installer
+ *  File     : main.h
+ * ============================================================
+ *
+ *  Description:
+ *    Defines EFI device path protocol structure, UEFI variable
+ *    attribute constants (NON_VOLATILE, BOOTSERVICE_ACCESS,
+ *    RUNTIME_ACCESS), device path type codes (MEDIA, END), the
+ *    ESP partition type GUID, and LOAD_OPTION_ACTIVE — all
+ *    required for building and writing valid UEFI firmware
+ *    environment variables from user-mode.
+ *
+ *  Purpose:
+ *    - Provide UEFI data structure definitions for main.c
+ *      without a UEFI SDK or firmware headers dependency.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>

