@@ -1,6 +1,6 @@
 # WhiteLotus
 
-> **WARNING: This project is for educational and research purposes only. The author does not condone or support any illegal use of this software. Use responsibly and only in environments where you have explicit permission to do so.**
+> **WARNING: This project is for educational and research purposes only. The author does not condone or support any illegal use of this software.**
 
 ## MSRC Research
 
