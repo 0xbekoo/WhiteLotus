@@ -17,59 +17,9 @@ The project consists of two main components that work together to achieve unsign
 1. **WhiteLotusDXE** - A UEFI DXE driver that hooks into the Windows boot chain
 2. **WhiteLotusEXE** - A Windows-side loader that deploys the DXE driver to the EFI System Partition (ESP)
 
-## Project Structure
-
-```
-WhiteLotus/
-├── WhiteLotusDXE/     # UEFI DXE Driver (main research component)
-└── WhiteLotusEXE/     # Windows Loader (deployment mechanism)
-```
-
 ## WhiteLotusDXE
 
 **WhiteLotusDXE** is a UEFI DXE (Driver eXecution Environment) driver that operates before the Windows kernel loads. This component is the core of the project and implements the actual bypass logic.
-
-### Key Features
-
-- **LoadImage Hook**: Intercepts **EFI_BOOT_SERVICES->LoadImage()** to monitor all EFI binaries loaded during boot
-- **Boot Manager Patching**: Locates and patches **bootmgfw.efi** (Windows Boot Manager) by hooking **ImgArchStartBootApplication**
-- **Winload Patching**: Patches **winload.efi** by hooking **OslFwpKernelSetupPhase1** to intercept kernel loading
-- **DSE Bypass**: Modifies **ntoskrnl.exe** to disable Driver Signature Enforcement by patching **CI.dll!CiInitialize**
-- **VBS Disabling**: Sets **VbsPolicyDisabled** EFI variable to disable Virtualization-Based Security
-
-### Architecture Flow
-
-```
-UEFI Firmware
-    │
-    ├─ WhiteLotusDXE loads as DXE driver
-    │
-    ├─ Hooks LoadImage() service
-    │
-    ├─ bootmgfw.efi loads → Hooked ImgArchStartBootApplication
-    │       │
-    │       └─ winload.efi loads → Hooked OslFwpKernelSetupPhase1
-    │               │
-    │               ├─ Patches ntoskrnl.exe (DSE bypass)
-    │               │
-    │               ├─ Disables VBS
-    │               │
-    │               └─ Boots Windows with unsigned driver support
-    │
-    └─ Windows Kernel loads with DSE disabled
-```
-
-### File Components
-
-| File | Purpose |
-|------|---------|
-| **WhiteLotus.c** | Main entry point, LoadImage/SetVariable hooks |
-| **PatchBootMgfw.c** | Patches bootmgfw.efi |
-| **PatchWinload.c** | Patches winload.efi, disables VBS |
-| **PatchKernel.c** | Patches ntoskrnl.exe/CI.dll for DSE bypass |
-| **PE.c/h** | PE image parsing utilities |
-| **Arch.h** | Architecture-specific definitions (CR0, MSR, etc.) |
-| **Intern.h** | Internal synchronization primitives |
 
 ## WhiteLotusEXE
 
